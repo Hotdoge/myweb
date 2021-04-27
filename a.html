@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上下传</title>
+    <link rel="icon" href="favicon.ico">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        .list-group-item{
+            height: 40px;
+        }
+        .mid{width: 70%;}
+        #inner{
+            width: 100%;
+            height: 240px;
+            overflow: auto;
+        }
+        .list-group-item:hover{background-color: rgb(218, 218, 218);}
+        #btn{
+            position: relative;
+            bottom:8px;}
+        img{width: 55px;height: 45px;}
+        body{
+            background-image: url(/b3.jpeg);
+            background-size:cover;
+        }
+        .aclick{
+            color:rgb(119, 158, 218);
+            text-decoration: underline;
+            float: left;
+            margin:0 5px;
+            }
+        .aclick:active{color: rgb(252, 98, 150);}
+    </style>
+   
+</head>
+<body>
+    <iframe id="myIframe" name="myIframe" style="display:none;"></iframe>   
+    <div class="container">
+        <div class="page-header">
+            <h1>Huoyao's 文件上下传小程序<small> 在这里您可以随意上传文件到云空间以及删除或下载文件</small></h1>
+        </div>
+
+        <div class="mid  center-block">
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                文件列表：   <button id='btn' class="btn btn-default pull-right" type="button">refresh</button>
+                </a>
+               <div id="inner">
+
+               </div>
+            </div>
+            <form class="form-inline" action="http://localhost:8002/up" target="myIframe" method="POST" enctype="multipart/form-data"
+            accept-charset="utf-8">
+            <div class="form-group">
+                <label for="exampleInputEmail2">File input:</label>
+                <input type="file" name="a" class="form-control">
+            </div>
+            <button id='btn2' type="submit" class="btn btn-default">上传文件</button>
+            </form>
+        </div>
+        <hr>
+        <ul class="pull-left">
+            <li>文件名重复会覆盖文件</li>
+            <li>文件按照名称排序</li>
+        </ul>
+        <div class="me pull-right"> 联系Huoyao：<a target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=Hi8nKC0tLSssLSpeb28wfXFz"><img src="./xf.png"/></a></div>
+</div>
+ </body>
+ <script>
+    var inner=document.getElementById('inner')
+    var btn=document.getElementById('btn')
+    var btn2=document.getElementById('btn2')
+    function aclick(a='refresh',b=0) {     
+        var xhr = new XMLHttpRequest();
+        if(b==3)
+        if(confirm('确定要执行该操作吗？')){
+            xhr.open('GET', 'http://127.0.0.1:8002/' + a)
+            xhr.send()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) 
+                location.reload(true)
+            }
+        }
+        else return 0;
+        if(b==2){
+            xhr.open('GET', 'http://127.0.0.1:8002/' + a)
+            xhr.send()
+        }
+        if(b==1){
+            xhr.open('GET', 'http://127.0.0.1:8002/' + a)
+            xhr.send()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) 
+                alert(xhr.response)      
+            }
+        }
+        if(b==0){
+            xhr.open('GET', 'http://127.0.0.1:8002/refresh')
+            xhr.send()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    inner.innerHTML=xhr.response
+                }
+            }
+        }
+    }
+    btn2.addEventListener('click',function(){
+        location.reload(true)
+    })
+    btn.onclick=aclick;
+    window.onload = aclick;
+</script>
